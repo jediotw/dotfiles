@@ -1,0 +1,15 @@
+# OS / editor state
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Shell history
+.zsh_history
+.bash_history
+
+# Secrets
+.env
+.env.*
+*.secret
+credentials*
