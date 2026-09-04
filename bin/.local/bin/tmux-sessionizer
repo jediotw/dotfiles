@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+PROJECTS_DIR="$HOME/projects"
+
+if [[ $# -eq 1 ]]; then
+    selected="$1"
+else
+    selected=$(find "$PROJECTS_DIR" -mindepth 1 -maxdepth 1 -type d | fzf)
+fi
+
+[[ -z "$selected" ]] && exit 0
+
+session_name=$(basename "$selected" | tr '.' '_')
+
+if ! tmux has-session -t="$session_name" 2>/dev/null; then
+    tmux new-session -ds "$session_name" -c "$selected"
+fi
+
+if [[ -n "$TMUX" ]]; then
+    tmux switch-client -t "$session_name"
+else
+    tmux attach-session -t "$session_name"
+fi
