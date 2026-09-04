@@ -10,6 +10,10 @@ keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit" })
 -- Oil
 keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
+keymap.set("n", "<leader>e", "<CMD>Oil<CR>", {
+    desc = "File Explorer",
+})
+
 -- Telescope
 keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Find Files" })
 keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Live Grep" })
