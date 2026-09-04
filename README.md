@@ -22,17 +22,9 @@ The goal is simple:
 
 ## Installation on a New Machine
 
-### 1. Clone the repository
-
 ```bash
 git clone https://github.com/jediOTW/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-```
-
-### 2. Run the installer
-
-```bash
-chmod +x install.sh
 ./install.sh
 ```
 
@@ -180,7 +172,8 @@ Plugins (via TPM):
 - tmux-fzf
 - tmux-open
 - vim-tmux-navigator
-- iSheild integration
+
+iSheild integration is configured separately through the tmux configuration.
 
 ---
 
@@ -308,7 +301,7 @@ The installer uses GNU Stow with:
 stow --restow
 ```
 
-so the configuration symlinks are refreshed automatically.
+so the configuration symlinks are created or refreshed automatically.
 
 ---
 
