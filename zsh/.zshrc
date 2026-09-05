@@ -94,3 +94,6 @@ case ":$PATH:" in
 esac
 # pnpm end
 . "$HOME/.deno/env"
+
+# opencode
+export PATH=/home/saurabh/.opencode/bin:$PATH
