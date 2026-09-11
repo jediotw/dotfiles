@@ -23,6 +23,26 @@ keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Help Tag
 keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
 keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Find References" })
 keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
+-- LSP Navigation
+keymap.set("n", "gi", vim.lsp.buf.implementation, {
+    desc = "Go to Implementation",
+})
+
+keymap.set("n", "gt", vim.lsp.buf.type_definition, {
+    desc = "Go to Type Definition",
+})
+
+keymap.set("n", "<leader>cd", vim.lsp.buf.declaration, {
+    desc = "Go to Declaration",
+})
+
+keymap.set("n", "<leader>ci", vim.lsp.buf.incoming_calls, {
+    desc = "Incoming Calls",
+})
+
+keymap.set("n", "<leader>co", vim.lsp.buf.outgoing_calls, {
+    desc = "Outgoing Calls",
+})
 
 keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
 keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
