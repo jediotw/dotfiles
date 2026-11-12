@@ -99,44 +99,62 @@ esac
 export PATH="$HOME/.opencode/bin:$PATH"
 
 # Far Manager-inspired terminal status title
-function set_terminal_title() {
-  local battery_text="BAT N/A"
-  local battery_dir
 
-  # Battery percentage
-  for battery_dir in /sys/class/power_supply/BAT*(N); do
-    if [[ -r "$battery_dir/capacity" ]]; then
-      local battery_level
-      IFS= read -r battery_level < "$battery_dir/capacity"
-      battery_text="BAT ${battery_level}%"
-      break
-    fi
-  done
+# Live terminal title
 
-  # System uptime
-  local uptime_seconds
-  IFS=' ' read -r uptime_seconds _ < /proc/uptime
-  local -i total_seconds=${uptime_seconds%%.*}
-  local -i days=$((total_seconds / 86400))
-  local -i hours=$((total_seconds % 86400 / 3600))
-  local -i minutes=$((total_seconds % 3600 / 60))
+# Live terminal title
+function update_terminal_title_state() {
+  print -r -- "${PWD:t}" > "$TERMINAL_TITLE_STATE_FILE"
+}
 
-  local uptime_text
-  if (( days > 0 )); then
-    uptime_text="UP ${days}d ${hours}h"
-  else
-    uptime_text="UP ${hours}h${minutes}m"
+function cleanup_terminal_title() {
+  if [[ -n ${TERMINAL_TITLE_PID:-} ]]; then
+    kill "$TERMINAL_TITLE_PID" 2>/dev/null
   fi
 
-  # 24-hour clock
-  local current_time
-  current_time=$(date '+%H:%M:%S')
-
-  # Update terminal title
-  printf '\e]0;Zsh | %s | %s | %s | %s\a' \
-    "${PWD:t}" "$battery_text" "$uptime_text" "$current_time"
+  [[ -n ${TERMINAL_TITLE_STATE_FILE:-} ]] &&
+    rm -f "$TERMINAL_TITLE_STATE_FILE"
 }
 
 autoload -Uz add-zsh-hook
-add-zsh-hook -d precmd set_terminal_title
-add-zsh-hook precmd set_terminal_title
+
+# Prevent duplicate background processes when reloading .zshrc
+cleanup_terminal_title
+
+TERMINAL_TITLE_STATE_FILE=$(mktemp "${TMPDIR:-/tmp}/zsh-title.XXXXXX")
+
+add-zsh-hook -d precmd update_terminal_title_state
+add-zsh-hook precmd update_terminal_title_state
+
+add-zsh-hook -d zshexit cleanup_terminal_title
+add-zsh-hook zshexit cleanup_terminal_title
+
+(
+  state_file="$TERMINAL_TITLE_STATE_FILE"
+
+  while [[ -r "$state_file" ]]; do
+    IFS= read -r current_dir < "$state_file"
+
+    battery_text="N/A"
+
+    for battery_dir in /sys/class/power_supply/BAT*(N); do
+      if [[ -r "$battery_dir/capacity" ]]; then
+        IFS= read -r battery_level < "$battery_dir/capacity"
+        battery_text="${battery_level}%"
+        break
+      fi
+    done
+
+    current_date=$(date '+%Y-%m-%d')
+    current_time=$(date '+%H:%M:%S')
+
+    printf '\e]0;⌁ Zsh │ %s │   %s │ 📅 %s │ ◷ %s\a' \
+      "$current_dir" "$battery_text" "$current_date" "$current_time" \
+      > /dev/tty
+
+    sleep 1
+  done
+) &!
+
+TERMINAL_TITLE_PID=$!
+
