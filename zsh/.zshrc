@@ -96,6 +96,5 @@ esac
 . "$HOME/.deno/env"
 
 # opencode
-export PATH=/home/saurabh/.opencode/bin:$PATH
-
-. "$HOME/snap/code/262/.local/share/../bin/env"
+# OpenCode
+export PATH="$HOME/.opencode/bin:$PATH"
