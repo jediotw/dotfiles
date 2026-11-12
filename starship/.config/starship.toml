@@ -1,0 +1,92 @@
+"$schema" = "https://starship.rs/config-schema.json"
+
+add_newline = true
+palette = "far_manager"
+
+format = """
+$directory$git_branch$git_status$package
+$python$java$golang$nodejs$docker_context$kubernetes
+$cmd_duration$status
+$character"""
+
+right_format = "$time"
+
+[palettes.far_manager]
+navy = "#000080"
+cyan = "#00FFFF"
+green = "#00FF00"
+yellow = "#FFFF00"
+gray = "#C0C0C0"
+white = "#FFFFFF"
+red = "#FF5555"
+
+[directory]
+style = "bold cyan"
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+symbol = "git "
+style = "bold yellow"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold red"
+format = "[$all_status$ahead_behind]($style) "
+
+[package]
+symbol = "pkg "
+style = "bold green"
+format = "is [$symbol$version]($style) "
+
+[python]
+symbol = "py "
+style = "bold cyan"
+format = "via [$symbol$version]($style) "
+
+[java]
+symbol = "java "
+style = "bold yellow"
+format = "[$symbol$version]($style) "
+
+[golang]
+symbol = "go "
+style = "bold cyan"
+format = "[$symbol$version]($style) "
+
+[nodejs]
+symbol = "node "
+style = "bold green"
+format = "[$symbol$version]($style) "
+
+[docker_context]
+symbol = "docker "
+style = "bold cyan"
+format = "via [$symbol$context]($style) "
+
+[kubernetes]
+disabled = false
+symbol = "k8s "
+style = "bold yellow"
+format = "on [$symbol$context]($style) "
+
+[cmd_duration]
+min_time = 2000
+format = "took [$duration]($style) "
+style = "bold yellow"
+
+[status]
+disabled = false
+format = "[$symbol$status]($style) "
+symbol = "ERROR "
+style = "bold red"
+
+[time]
+disabled = false
+time_format = "%H:%M:%S"
+format = "[$time]($style)"
+style = "bold yellow"
+
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[>](bold red)"

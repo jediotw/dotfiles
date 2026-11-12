@@ -96,5 +96,47 @@ esac
 . "$HOME/.deno/env"
 
 # opencode
-# OpenCode
 export PATH="$HOME/.opencode/bin:$PATH"
+
+# Far Manager-inspired terminal status title
+function set_terminal_title() {
+  local battery_text="BAT N/A"
+  local battery_dir
+
+  # Battery percentage
+  for battery_dir in /sys/class/power_supply/BAT*(N); do
+    if [[ -r "$battery_dir/capacity" ]]; then
+      local battery_level
+      IFS= read -r battery_level < "$battery_dir/capacity"
+      battery_text="BAT ${battery_level}%"
+      break
+    fi
+  done
+
+  # System uptime
+  local uptime_seconds
+  IFS=' ' read -r uptime_seconds _ < /proc/uptime
+  local -i total_seconds=${uptime_seconds%%.*}
+  local -i days=$((total_seconds / 86400))
+  local -i hours=$((total_seconds % 86400 / 3600))
+  local -i minutes=$((total_seconds % 3600 / 60))
+
+  local uptime_text
+  if (( days > 0 )); then
+    uptime_text="UP ${days}d ${hours}h"
+  else
+    uptime_text="UP ${hours}h${minutes}m"
+  fi
+
+  # 24-hour clock
+  local current_time
+  current_time=$(date '+%H:%M:%S')
+
+  # Update terminal title
+  printf '\e]0;Zsh | %s | %s | %s | %s\a' \
+    "${PWD:t}" "$battery_text" "$uptime_text" "$current_time"
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook -d precmd set_terminal_title
+add-zsh-hook precmd set_terminal_title
