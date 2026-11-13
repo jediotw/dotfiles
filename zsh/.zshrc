@@ -51,6 +51,9 @@ if command -v lazygit >/dev/null; then
     alias lg="lazygit"
 fi
 
+# Eza — Far Manager-inspired colors
+export EZA_COLORS='di=1;32:fi=0;37:ex=1;32:ln=1;36:*.zip=1;33:*.png=1;35:*.jpg=1;35'
+
 if command -v eza >/dev/null; then
     alias ls="eza --icons"
     alias ll="eza -lah --icons"
